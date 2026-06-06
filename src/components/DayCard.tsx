@@ -1,12 +1,13 @@
+import { lightLabel, localeTag, weatherLabel } from '../i18n'
 import type { DayForecast } from '../lib/scoring'
 import { formatDayLabel, formatWindow } from '../lib/time'
-import { describeWeatherCode } from '../lib/weather'
-import { LIGHT_LABEL, LightDot } from './TrafficLight'
+import { weatherIcon } from '../lib/weather'
+import { m } from '../paraglide/messages.js'
+import { LightDot } from './TrafficLight'
 
 /** One day in the 7-day forecast. */
 export function DayCard({ day, today }: { day: DayForecast; today: string }) {
-  const { weekday, day: dom } = formatDayLabel(day.date, today)
-  const wx = describeWeatherCode(day.weatherCode)
+  const { weekday, day: dom } = formatDayLabel(day.date, today, localeTag(), m.day_today())
   return (
     <div className={`day day--${day.light}`}>
       <div className="day-head">
@@ -17,22 +18,22 @@ export function DayCard({ day, today }: { day: DayForecast; today: string }) {
         <LightDot light={day.light} size={16} />
       </div>
 
-      <div className="day-wx" title={wx.label}>
-        <span className="day-icon">{wx.icon}</span>
+      <div className="day-wx" title={weatherLabel(day.weatherCode)}>
+        <span className="day-icon">{weatherIcon(day.weatherCode)}</span>
         <span className="day-temp">
           {Math.round(day.tMaxC)}° <span className="muted">/ {Math.round(day.tMinC)}°</span>
         </span>
       </div>
 
-      <div className="day-verdict">{LIGHT_LABEL[day.light]}</div>
+      <div className="day-verdict">{lightLabel(day.light)}</div>
 
       <dl className="day-stats">
         <div>
-          <dt>Window</dt>
+          <dt>{m.day_window()}</dt>
           <dd>{day.window ? formatWindow(day.window.startHour, day.window.endHour) : '—'}</dd>
         </div>
         <div>
-          <dt>Rain</dt>
+          <dt>{m.day_rain()}</dt>
           <dd>
             {day.precipMm} mm{day.maxPrecipProb > 0 ? ` · ${day.maxPrecipProb}%` : ''}
           </dd>

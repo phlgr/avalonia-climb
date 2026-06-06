@@ -1,4 +1,5 @@
 import type { Light } from '../lib/scoring'
+import { m } from '../paraglide/messages.js'
 
 export interface HourTick {
   hour: number
@@ -14,7 +15,7 @@ export function HourlyStrip({ ticks }: { ticks: HourTick[] }) {
       {ticks.map((t) => (
         <div key={t.hour} className={`tick tick--${t.light}${t.isNow ? ' now' : ''}`}>
           <span className="tick-bar" />
-          <span className="tick-hour">{t.isNow ? 'now' : t.hour}</span>
+          <span className="tick-hour">{t.isNow ? m.hour_now() : t.hour}</span>
         </div>
       ))}
     </div>

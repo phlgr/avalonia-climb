@@ -5,6 +5,7 @@ import { activeRockProfile, CRAG } from '../config'
 import { buildForecast, computeWetness } from '../lib/scoring'
 import { todayLocalDate } from '../lib/time'
 import { useWeather } from '../lib/useWeather'
+import { m } from '../paraglide/messages.js'
 
 export const Route = createFileRoute('/forecast')({ component: ForecastView })
 
@@ -26,11 +27,10 @@ function ForecastView() {
   return (
     <section className="forecast">
       <div className="section-head">
-        <h2>Next 7 days</h2>
+        <h2>{m.forecast_title()}</h2>
       </div>
       <p className="muted forecast-note">
-        Best light expected during daylight ({CRAG.dayStartHour}:00–{CRAG.dayEndHour}:00), with the
-        window when conditions are on.
+        {m.forecast_note({ start: CRAG.dayStartHour, end: CRAG.dayEndHour })}
       </p>
       <div className="days">
         {days.map((d) => (

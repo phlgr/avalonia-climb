@@ -9,7 +9,7 @@
 // citations in the README. Each rock type sets how rain splits between a
 // fast-drying surface film and slow internal moisture, and how fast each dries.
 
-type RockType =
+export type RockType =
   | 'sandstone'
   | 'granite'
   | 'gneiss'

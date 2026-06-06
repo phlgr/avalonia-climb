@@ -1,5 +1,6 @@
 import { copyFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
@@ -28,5 +29,14 @@ function spaFallback(): Plugin {
 
 export default defineConfig({
   base: BASE,
-  plugins: [tanstackRouter({ target: 'react', autoCodeSplitting: true }), react(), spaFallback()],
+  plugins: [
+    paraglideVitePlugin({
+      project: './project.inlang',
+      outdir: './src/paraglide',
+      strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
+    }),
+    tanstackRouter({ target: 'react', autoCodeSplitting: true }),
+    react(),
+    spaFallback(),
+  ],
 })

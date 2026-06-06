@@ -14,12 +14,17 @@ export function todayLocalDate(now: Date = new Date()): string {
   return localNowHourIso(now).slice(0, 10)
 }
 
-/** "Mon" / "Tue" weekday + day-of-month for a "YYYY-MM-DD" date, plus a Today/Tomorrow flag. */
-export function formatDayLabel(dateIso: string, today: string): { weekday: string; day: number } {
+/** Localized "Mon"/"Tue" weekday + day-of-month for a "YYYY-MM-DD" date. */
+export function formatDayLabel(
+  dateIso: string,
+  today: string,
+  locale: string,
+  todayLabel: string,
+): { weekday: string; day: number } {
   const [y, m, d] = dateIso.split('-').map(Number)
   const date = new Date(y, m - 1, d)
   const weekday =
-    dateIso === today ? 'Today' : date.toLocaleDateString(undefined, { weekday: 'short' })
+    dateIso === today ? todayLabel : date.toLocaleDateString(locale, { weekday: 'short' })
   return { weekday, day: d }
 }
 
@@ -30,8 +35,13 @@ export function formatWindow(startHour: number, endHour: number): string {
 }
 
 /** "Today 14:00" / "Sat 14:00" label for a drying ETA timestamp. */
-export function formatEta(timeIso: string, today: string): string {
+export function formatEta(
+  timeIso: string,
+  today: string,
+  locale: string,
+  todayLabel: string,
+): string {
   const hour = Number(timeIso.slice(11, 13))
-  const { weekday } = formatDayLabel(timeIso.slice(0, 10), today)
+  const { weekday } = formatDayLabel(timeIso.slice(0, 10), today, locale, todayLabel)
   return `${weekday} ${pad(hour)}:00`
 }

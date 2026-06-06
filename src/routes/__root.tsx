@@ -1,10 +1,13 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
-import { activeRockProfile, CRAG } from '../config'
+import { CRAG } from '../config'
+import { rockName } from '../i18n'
+import { m } from '../paraglide/messages.js'
+import { getLocale, locales, setLocale } from '../paraglide/runtime.js'
 
 export const Route = createRootRoute({ component: RootLayout })
 
 function RootLayout() {
-  const rock = activeRockProfile()
+  const current = getLocale()
   return (
     <div className="app">
       <header className="topbar">
@@ -17,17 +20,33 @@ function RootLayout() {
             <p className="brand-sub">{CRAG.region}</p>
           </div>
         </div>
-        <nav className="nav">
-          <Link to="/" activeProps={{ className: 'active' }} activeOptions={{ exact: true }}>
-            Now
-          </Link>
-          <Link to="/forecast" activeProps={{ className: 'active' }}>
-            7-day
-          </Link>
-          <Link to="/method" activeProps={{ className: 'active' }}>
-            Method
-          </Link>
-        </nav>
+        <div className="topbar-right">
+          <nav className="nav">
+            <Link to="/" activeProps={{ className: 'active' }} activeOptions={{ exact: true }}>
+              {m.nav_now()}
+            </Link>
+            <Link to="/forecast" activeProps={{ className: 'active' }}>
+              {m.nav_forecast()}
+            </Link>
+            <Link to="/method" activeProps={{ className: 'active' }}>
+              {m.nav_method()}
+            </Link>
+          </nav>
+          <div className="lang">
+            {locales.map((loc) => (
+              <button
+                key={loc}
+                type="button"
+                className={`lang-btn${loc === current ? ' active' : ''}`}
+                aria-pressed={loc === current}
+                aria-label={`Switch language to ${loc.toUpperCase()}`}
+                onClick={() => setLocale(loc)}
+              >
+                {loc.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       <main className="content">
@@ -36,17 +55,16 @@ function RootLayout() {
 
       <footer className="foot">
         <p>
-          <strong>{CRAG.rock}</strong> · {rock.blurb}
+          <strong>{rockName(CRAG.rock)}</strong> · {m.crag_blurb()}
         </p>
         <p className="muted">
-          Weather &amp; ET₀ from{' '}
+          {m.footer_weather_from()}{' '}
           <a href="https://open-meteo.com" target="_blank" rel="noreferrer">
             Open-Meteo
           </a>
-          . Conditions are modelled, not measured &#8212;{' '}
-          <Link to="/method">how it works &amp; sources</Link>.
+          . {m.footer_modelled()} <Link to="/method">{m.footer_method_link()}</Link>.
         </p>
-        <p className="muted">A hint, not a safety guarantee — always check the rock yourself.</p>
+        <p className="muted">{m.footer_disclaimer()}</p>
       </footer>
     </div>
   )
