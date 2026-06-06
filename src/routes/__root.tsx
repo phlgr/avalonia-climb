@@ -18,6 +18,44 @@ function TopoMark() {
   )
 }
 
+/** Little mountaineering glyphs for the bottom tabs. */
+function TabIcon({ name }: { name: 'now' | 'forecast' | 'method' }) {
+  return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative; the tab label sits beside it
+    <svg
+      className="tab-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {name === 'now' && (
+        <>
+          <circle cx="17" cy="6.5" r="2.5" />
+          <path d="M3 19 L10 8 L14 14 L17.5 9.5 L21 19" />
+        </>
+      )}
+      {name === 'forecast' && (
+        <>
+          <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
+          <path d="M3.5 9.5 H20.5" />
+          <path d="M8 3.5 V6.5" />
+          <path d="M16 3.5 V6.5" />
+        </>
+      )}
+      {name === 'method' && (
+        <>
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="M12 6.5 L14.5 13 L12 17.5 L9.5 13 Z" />
+        </>
+      )}
+    </svg>
+  )
+}
+
 function RootLayout() {
   const current = getLocale()
   return (
@@ -74,13 +112,16 @@ function RootLayout() {
             activeProps={{ className: 'active' }}
             activeOptions={{ exact: true }}
           >
-            {m.nav_now()}
+            <TabIcon name="now" />
+            <span className="tab-label">{m.nav_now()}</span>
           </Link>
           <Link to="/forecast" className="tab" activeProps={{ className: 'active' }}>
-            {m.nav_forecast()}
+            <TabIcon name="forecast" />
+            <span className="tab-label">{m.nav_forecast()}</span>
           </Link>
           <Link to="/method" className="tab" activeProps={{ className: 'active' }}>
-            {m.nav_method()}
+            <TabIcon name="method" />
+            <span className="tab-label">{m.nav_method()}</span>
           </Link>
         </div>
       </nav>
