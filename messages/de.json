@@ -75,6 +75,7 @@
   "footer_modelled": "Bedingungen sind modelliert, nicht gemessen —",
   "footer_method_link": "wie’s funktioniert & Quellen",
   "footer_disclaimer": "Ein Anhaltspunkt, keine Sicherheitsgarantie — prüf den Fels immer selbst.",
+  "footer_source": "Quellcode auf GitHub",
   "method_title": "Wie wir entscheiden",
   "method_lead": "Wir holen jede Stunde die Vorhersage für {name}, schätzen, wie nass der Fels ist, und bewerten die Bedingungen von 0 bis 100. Dieser Wert ist die Ampel. Die Zahlen sind auf {rock} eingestellt, den Fels, auf dem du wirklich kletterst, und das Trocknen rechnen wir mit echter Physik statt mit einer pauschalen „nach Regen einen Tag warten“-Regel. Versteh das als Anhaltspunkt, nicht als Garantie.",
   "method_s1h": "1 · Das Urteil",

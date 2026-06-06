@@ -102,6 +102,11 @@ function RootLayout() {
           . {m.footer_modelled()} <Link to="/method">{m.footer_method_link()}</Link>.
         </p>
         <p className="muted">{m.footer_disclaimer()}</p>
+        <p className="muted">
+          <a href="https://github.com/phlgr/avalonia-climb" target="_blank" rel="noreferrer">
+            {m.footer_source()}
+          </a>
+        </p>
       </footer>
 
       <nav className="tabbar" aria-label="Primary">
