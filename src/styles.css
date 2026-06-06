@@ -208,6 +208,10 @@ a:hover {
 .content {
   flex: 1;
   padding: 1.25rem 0 0;
+  /* Own stacking context: keeps an open popover's z-index contained below the
+     sticky header and bottom nav, and gives the header's backdrop-filter a
+     stable backdrop so it doesn't render transparent when a section is lifted. */
+  isolation: isolate;
 }
 
 .foot {
@@ -478,11 +482,12 @@ a:hover {
 }
 /* The entrance animation makes each section its own stacking context, which
    would otherwise trap an open popover behind later siblings. Lift whichever
-   section/card currently holds an open popover above its neighbours. */
+   section/card currently holds an open popover above its neighbours — but keep
+   it below the sticky header (15) and bottom nav (20) so those stay on top. */
 .now > *:has(.scoreinfo-pop),
 .forecast > *:has(.scoreinfo-pop) {
   position: relative;
-  z-index: 40;
+  z-index: 10;
 }
 .day:has(.scoreinfo-pop) {
   position: relative;
