@@ -14,6 +14,7 @@
     "knip": "bun run i18n && knip"
   },
   "dependencies": {
+    "@plausible-analytics/tracker": "^0.4.5",
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-router": "^1.170.10",
     "react": "^19.2.7",

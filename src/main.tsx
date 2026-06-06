@@ -1,9 +1,15 @@
+import { init as initPlausible } from '@plausible-analytics/tracker'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
 import { routeTree } from './routeTree.gen'
+
+initPlausible({
+  domain: 'isavaloniadry.gartz.dev',
+  endpoint: 'https://apps.gartz.dev/api/event',
+})
 
 const queryClient = new QueryClient()
 
