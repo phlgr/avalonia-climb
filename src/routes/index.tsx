@@ -50,7 +50,7 @@ function NowView() {
 
   return (
     <section className="now">
-      <TrafficLight light={now.light} score={now.score} />
+      <TrafficLight light={now.light} score={now.score} breakdown={now.breakdown} />
       <p className="tagline">{lightTagline(now.light)}</p>
 
       {eta ? (

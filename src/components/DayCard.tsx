@@ -2,6 +2,7 @@ import { localeTag, verdictWord, weatherLabel } from '../i18n'
 import type { DayForecast } from '../lib/scoring'
 import { formatDayLabel, formatWindow } from '../lib/time'
 import { m } from '../paraglide/messages.js'
+import { ScoreInfo } from './ScoreInfo'
 import { WeatherGlyph } from './WeatherGlyph'
 
 /** One day in the 7-day forecast — an almanac ledger row. */
@@ -19,6 +20,7 @@ export function DayCard({ day, today }: { day: DayForecast; today: string }) {
           <span className="day-grade">
             <span className="day-verdict">{verdictWord(day.light)}</span>
             <span className="day-score">{day.bestScore}</span>
+            <ScoreInfo breakdown={day.breakdown} align="end" />
           </span>
         </div>
         <div className="day-stats">

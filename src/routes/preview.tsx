@@ -5,8 +5,33 @@ import { MetricGrid } from '../components/MetricGrid'
 import { TrafficLight } from '../components/TrafficLight'
 import { Legend } from '../components/Ui'
 import { lightTagline, reasonText } from '../i18n'
-import type { DayForecast, Light, Reason } from '../lib/scoring'
+import {
+  type Breakdown,
+  type DayForecast,
+  type Light,
+  type Reason,
+  SCORE_WEIGHTS,
+} from '../lib/scoring'
 import type { HourPoint } from '../lib/weather'
+
+/** Build a mock breakdown from per-factor sub-scores (0–1) for the dev gallery. */
+function mkBreakdown(
+  temp: number,
+  dryness: number,
+  humidity: number,
+  wind: number,
+  override?: Breakdown['override'],
+): Breakdown {
+  const subs = { temp, dryness, humidity, wind } as const
+  const parts = (['temp', 'dryness', 'humidity', 'wind'] as const).map((factor) => ({
+    factor,
+    weight: SCORE_WEIGHTS[factor],
+    sub: subs[factor],
+    points: Math.round(100 * SCORE_WEIGHTS[factor] * subs[factor]),
+  }))
+  const blend = Math.round(100 * parts.reduce((s, p) => s + p.weight * p.sub, 0))
+  return { parts, blend, override }
+}
 
 // A dev gallery to eyeball every verdict state at once (the live page only ever
 // shows today's real weather). Not linked in the nav — open /preview directly.
@@ -17,6 +42,7 @@ interface Sample {
   score: number
   point: HourPoint
   reasons: Reason[]
+  breakdown: Breakdown
 }
 
 const SAMPLES: Sample[] = [
@@ -34,6 +60,7 @@ const SAMPLES: Sample[] = [
       et0: 0.3,
     },
     reasons: [{ code: 'rockDry' }, { code: 'tempPrime', temp: 8 }, { code: 'airDry', rh: 55 }],
+    breakdown: mkBreakdown(0.9, 1, 0.7, 0.5),
   },
   {
     light: 'yellow',
@@ -53,6 +80,7 @@ const SAMPLES: Sample[] = [
       { code: 'tempWarm', temp: 16 },
       { code: 'airHumid', rh: 78 },
     ],
+    breakdown: mkBreakdown(0.6, 0.6, 0.4, 0.5),
   },
   {
     light: 'red',
@@ -68,6 +96,7 @@ const SAMPLES: Sample[] = [
       et0: 0.05,
     },
     reasons: [{ code: 'wetInside' }, { code: 'wetInsideWait' }, { code: 'rainSoon', hours: 2 }],
+    breakdown: mkBreakdown(0.8, 0, 0.2, 0.8, 'wetInside'),
   },
 ]
 
@@ -78,6 +107,7 @@ const DAYS: DayForecast[] = [
     date: '2026-06-09',
     light: 'green',
     bestScore: 84,
+    breakdown: mkBreakdown(0.9, 1, 0.7, 0.5),
     window: { startHour: 9, endHour: 18 },
     tMinC: 6,
     tMaxC: 14,
@@ -89,6 +119,7 @@ const DAYS: DayForecast[] = [
     date: '2026-06-10',
     light: 'yellow',
     bestScore: 54,
+    breakdown: mkBreakdown(0.6, 0.6, 0.4, 0.5),
     window: { startHour: 12, endHour: 16 },
     tMinC: 10,
     tMaxC: 19,
@@ -100,6 +131,7 @@ const DAYS: DayForecast[] = [
     date: '2026-06-11',
     light: 'red',
     bestScore: 0,
+    breakdown: mkBreakdown(0.8, 0, 0.2, 0.8, 'wetInside'),
     window: null,
     tMinC: 9,
     tMaxC: 13,
@@ -173,7 +205,7 @@ function PreviewView() {
       {SAMPLES.map((s) => (
         <section className={`preview-state preview-state--${s.light}`} key={s.light}>
           <span className={`preview-tag preview-tag--${s.light}`}>{s.light}</span>
-          <TrafficLight light={s.light} score={s.score} />
+          <TrafficLight light={s.light} score={s.score} breakdown={s.breakdown} />
           <p className="tagline">{lightTagline(s.light)}</p>
           <ul className="reasons">
             {s.reasons.map((r) => (

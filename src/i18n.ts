@@ -1,7 +1,7 @@
 // Bridges the app's dynamic values (scoring reason codes, WMO weather codes,
 // locale-aware date formatting) to Paraglide's compiled, type-safe messages.
 import type { RockType } from './config'
-import type { Light, Reason } from './lib/scoring'
+import type { Light, Reason, ScoreFactor } from './lib/scoring'
 import { m } from './paraglide/messages.js'
 import { getLocale } from './paraglide/runtime.js'
 
@@ -49,6 +49,30 @@ export function lightTagline(light: Light): string {
     : light === 'yellow'
       ? m.tagline_yellow()
       : m.tagline_red()
+}
+
+/** Localized label for one of the four score factors (reuses the Method-page wording). */
+export function scoreFactorLabel(factor: ScoreFactor): string {
+  switch (factor) {
+    case 'temp':
+      return m.method_w_temp()
+    case 'dryness':
+      return m.method_w_dryness()
+    case 'humidity':
+      return m.method_w_humidity()
+    case 'wind':
+      return m.method_w_wind()
+  }
+}
+
+/** The condition that forced the score to red, as a short localized headline. */
+export function scoreOverrideText(override: 'rainingNow' | 'wetInside'): string {
+  return override === 'rainingNow' ? m.score_override_raining() : m.score_override_wet()
+}
+
+/** The reason that condition is a hard zero (the rule behind the override). */
+export function scoreOverrideRule(override: 'rainingNow' | 'wetInside'): string {
+  return override === 'rainingNow' ? m.score_override_rule_raining() : m.score_override_rule_wet()
 }
 
 /** Turn a language-neutral scoring reason into a localized string. */

@@ -23,12 +23,37 @@ export type Reason =
   | { code: 'windStrong'; wind: number }
   | { code: 'rainSoon'; hours: number }
 
+/** The four factors blended into the conditions score. */
+export type ScoreFactor = 'temp' | 'humidity' | 'dryness' | 'wind'
+
+/** One factor's contribution to the weighted score, for the "how it adds up" popover. */
+interface ScorePart {
+  factor: ScoreFactor
+  /** Relative weight of this factor (0–1). */
+  weight: number
+  /** This factor's own score (0–1). */
+  sub: number
+  /** Points this factor contributes to the 0–100 total. */
+  points: number
+}
+
+/** How a score comes together: the weighted blend, plus any hard-rule override. */
+export interface Breakdown {
+  parts: ScorePart[]
+  /** Weighted-blend total (0–100), before any hard-red override. */
+  blend: number
+  /** A hard rule forced the score to red, overriding the blend. */
+  override?: 'rainingNow' | 'wetInside'
+}
+
 export interface Assessment {
   light: Light
   /** 0–100 overall conditions score (only meaningful when not a hard red). */
   score: number
   /** Ordered reasons (language-neutral codes), most important first. */
   reasons: Reason[]
+  /** Per-factor breakdown of how the score was reached. */
+  breakdown: Breakdown
 }
 
 const RAIN_MM = 0.2 // per-hour precip considered enough to wet the rock
@@ -127,24 +152,25 @@ export function assessHour(
   const w = wet[index]
   const rainingNow = p.precipMm >= RAIN_MM
 
-  // ── Hard reds: nothing about nice air overrides active rain or wet fragile rock.
-  if (rainingNow) {
-    return { light: 'red', score: 0, reasons: [{ code: 'rainingNow' }] }
-  }
-  if (rock.fragileWhenWet && w.coreUnsafe) {
-    return {
-      light: 'red',
-      score: 0,
-      reasons: [{ code: 'wetInside' }, { code: 'wetInsideWait' }],
-    }
-  }
-
-  // ── Component scores (0–1).
+  // ── Component scores (0–1), always computed so the breakdown is available even
+  // when a hard rule forces red.
   const tScore = bandScore(p.tempC, rock.idealTempC, rock.okTempC)
   const hScore = humidityScore(p.humidity, rock.humidityGreasyPct)
   const wScore = windScore(p.windKmh)
   const dryScore = w.surfaceWet ? clamp01(1 - w.surfaceMm / FILM_FULL_MM) : 1
 
+  const part = (factor: ScoreFactor, weight: number, sub: number): ScorePart => ({
+    factor,
+    weight,
+    sub,
+    points: Math.round(100 * weight * sub),
+  })
+  const parts: ScorePart[] = [
+    part('temp', SCORE_WEIGHTS.temp, tScore),
+    part('dryness', SCORE_WEIGHTS.dryness, dryScore),
+    part('humidity', SCORE_WEIGHTS.humidity, hScore),
+    part('wind', SCORE_WEIGHTS.wind, wScore),
+  ]
   const score = Math.round(
     100 *
       (SCORE_WEIGHTS.temp * tScore +
@@ -152,6 +178,25 @@ export function assessHour(
         SCORE_WEIGHTS.dryness * dryScore +
         SCORE_WEIGHTS.wind * wScore),
   )
+  const breakdown: Breakdown = { parts, blend: score }
+
+  // ── Hard reds: nothing about nice air overrides active rain or wet fragile rock.
+  if (rainingNow) {
+    return {
+      light: 'red',
+      score: 0,
+      reasons: [{ code: 'rainingNow' }],
+      breakdown: { ...breakdown, override: 'rainingNow' },
+    }
+  }
+  if (rock.fragileWhenWet && w.coreUnsafe) {
+    return {
+      light: 'red',
+      score: 0,
+      reasons: [{ code: 'wetInside' }, { code: 'wetInsideWait' }],
+      breakdown: { ...breakdown, override: 'wetInside' },
+    }
+  }
 
   // ── Reasons, most decisive first.
   const reasons: Reason[] = []
@@ -178,7 +223,7 @@ export function assessHour(
   let light: Light = score >= GREEN_MIN ? 'green' : score >= YELLOW_MIN ? 'yellow' : 'red'
   if (light === 'green' && (w.surfaceWet || soon >= RAIN_MM)) light = 'yellow'
 
-  return { light, score, reasons }
+  return { light, score, reasons, breakdown }
 }
 
 /**
@@ -247,6 +292,8 @@ export interface DayForecast {
   /** Best light achievable in the daytime window. */
   light: Light
   bestScore: number
+  /** Breakdown of the best-scoring hour, for the "how it adds up" popover. */
+  breakdown: Breakdown
   /** Best contiguous daytime window of green/yellow hours, or null if none. */
   window: { startHour: number; endHour: number } | null
   tMinC: number
@@ -321,6 +368,7 @@ export function buildForecast(
       date,
       light: best ? best.light : 'red',
       bestScore: best ? best.score : 0,
+      breakdown: best ? best.breakdown : { parts: [], blend: 0 },
       window,
       tMinC: Math.min(...temps),
       tMaxC: Math.max(...temps),

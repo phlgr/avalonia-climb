@@ -1,10 +1,19 @@
 import { lightLabel, verdictWord } from '../i18n'
-import { GREEN_MIN, type Light, YELLOW_MIN } from '../lib/scoring'
+import { type Breakdown, GREEN_MIN, type Light, YELLOW_MIN } from '../lib/scoring'
 import { m } from '../paraglide/messages.js'
 import { CragScene } from './CragScene'
+import { ScoreInfo } from './ScoreInfo'
 
 /** The hero verdict for the "Now" view: a one-word answer, a little crag scene, a score gauge. */
-export function TrafficLight({ light, score }: { light: Light; score: number }) {
+export function TrafficLight({
+  light,
+  score,
+  breakdown,
+}: {
+  light: Light
+  score: number
+  breakdown: Breakdown
+}) {
   const label = lightLabel(light)
   const pct = Math.max(0, Math.min(100, score))
   return (
@@ -23,6 +32,7 @@ export function TrafficLight({ light, score }: { light: Light; score: number }) 
           <span className="score-num">
             {score}
             <small>/100</small>
+            <ScoreInfo breakdown={breakdown} align="end" />
           </span>
         </div>
         <div className="gauge">

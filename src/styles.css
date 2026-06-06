@@ -416,6 +416,197 @@ a:hover {
   background: var(--line-strong);
 }
 
+/* Score breakdown popover — opens on hover or tap next to a score */
+.scoreinfo {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 0.4em;
+}
+.scoreinfo-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-faint);
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+.scoreinfo-trigger:hover,
+.scoreinfo-trigger[aria-expanded="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.scoreinfo-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.scoreinfo-pop {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  z-index: 20;
+  width: min(21rem, calc(100vw - 1.5rem));
+  padding: 0.85rem 0.95rem 0.95rem;
+  text-align: left;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  /* Reset inherited nowrap (e.g. from .day-grade) so the text wraps in the box. */
+  white-space: normal;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
+.scoreinfo-pop--start {
+  left: 0;
+}
+.scoreinfo-pop--end {
+  right: 0;
+}
+/* The entrance animation makes each section its own stacking context, which
+   would otherwise trap an open popover behind later siblings. Lift whichever
+   section/card currently holds an open popover above its neighbours. */
+.now > *:has(.scoreinfo-pop),
+.forecast > *:has(.scoreinfo-pop) {
+  position: relative;
+  z-index: 40;
+}
+.day:has(.scoreinfo-pop) {
+  position: relative;
+  z-index: 1;
+}
+.scoreinfo-title {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.scoreinfo-forced {
+  margin: 0 0 0.7rem;
+  padding: 0.6rem 0.7rem;
+  background: color-mix(in srgb, var(--no) 14%, var(--paper-card));
+  border: 1px solid color-mix(in srgb, var(--no) 35%, transparent);
+  border-radius: 11px;
+}
+.scoreinfo-forced-reason {
+  margin: 0 0 0.35rem;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--no);
+}
+.scoreinfo-forced-rule {
+  margin: 0;
+  font-size: 0.83rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.scoreinfo-intro {
+  margin: 0 0 0.55rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.scoreinfo-parts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.scoreinfo-parts li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: baseline;
+  column-gap: 0.7rem;
+  row-gap: 0.35rem;
+  padding: 0.45rem 0;
+  font-size: 0.88rem;
+}
+.scoreinfo-parts li + li {
+  border-top: 1px solid var(--line);
+}
+.sb-name {
+  grid-column: 1;
+  min-width: 0;
+  color: var(--ink);
+}
+.sb-weight {
+  grid-column: 2;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+.sb-points {
+  grid-column: 3;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--ink);
+}
+.sb-bar {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  height: 5px;
+  background: var(--paper-sunk);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.sb-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+.scoreinfo-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.65rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.scoreinfo-total small {
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+/* When a hard rule forced the score, the blend is shown only as context. */
+.scoreinfo-parts--muted {
+  opacity: 0.65;
+}
+.scoreinfo-total--muted {
+  font-weight: 400;
+  color: var(--ink-soft);
+  border-top-color: var(--line);
+}
+.scoreinfo-more {
+  display: inline-block;
+  margin-top: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+}
+
 /* Outlook — a softly sky-tinted note with a little weather mark */
 .outlook {
   display: flex;
