@@ -1,0 +1,33 @@
+{
+  "name": "avalonia-climb",
+  "private": true,
+  "type": "module",
+  "description": "Bouldering go/no-go traffic light + 7-day forecast for the Avalonia crag",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "knip": "knip"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.101.0",
+    "@tanstack/react-router": "^1.170.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "@tanstack/router-plugin": "^1.168.13",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "knip": "^6.15.0",
+    "lefthook": "^2.1.9",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  }
+}
