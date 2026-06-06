@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- paper -->
+  <rect width="1200" height="630" fill="#f1e7d4"/>
+  <rect width="1200" height="630" fill="none"/>
+
+  <!-- faint topo contour rings, bleeding off the right edge (echoes the brand mark) -->
+  <g fill="none" stroke="#d9c7a4" stroke-width="3" opacity="0.9">
+    <ellipse cx="1140" cy="316" rx="430" ry="300"/>
+    <ellipse cx="1140" cy="316" rx="330" ry="226"/>
+    <ellipse cx="1140" cy="316" rx="232" ry="156"/>
+    <ellipse cx="1140" cy="316" rx="140" ry="92"/>
+  </g>
+
+  <!-- top + bottom hairlines -->
+  <rect x="80" y="78" width="1040" height="3" fill="#c2aa80"/>
+  <rect x="80" y="551" width="1040" height="3" fill="#c2aa80"/>
+
+  <!-- kicker -->
+  <text x="80" y="138" font-family="DejaVu Sans Mono, monospace" font-size="26" letter-spacing="5" fill="#6c5f49">BOULDERING CONDITIONS</text>
+
+  <!-- headline -->
+  <text x="76" y="288" font-family="Liberation Serif, Georgia, serif" font-weight="bold" font-size="116" fill="#241b0f">Is Avalonia</text>
+  <text x="76" y="402" font-family="Liberation Serif, Georgia, serif" font-weight="bold" font-size="116" fill="#241b0f">dry</text>
+  <text x="251" y="402" font-family="Liberation Serif, Georgia, serif" font-weight="bold" font-size="116" fill="#bb5418">?</text>
+
+  <!-- subtitle -->
+  <text x="80" y="470" font-family="Liberation Serif, Georgia, serif" font-size="34" fill="#6c5f49">A one-glance go / no-go verdict for the crag,</text>
+  <text x="80" y="514" font-family="Liberation Serif, Georgia, serif" font-size="34" fill="#6c5f49">modelled hour-by-hour from the weather.</text>
+
+  <!-- footer line -->
+  <text x="80" y="600" font-family="DejaVu Sans Mono, monospace" font-size="25" letter-spacing="2" fill="#9a8b6f">isavaloniadry.gartz.dev</text>
+  <text x="1120" y="600" text-anchor="end" font-family="DejaVu Sans Mono, monospace" font-size="25" letter-spacing="1" fill="#9a8b6f">Ruhrtal sandstone</text>
+
+  <!-- the signal: rounded housing with three stacked traffic-light dots (the favicon, enlarged) -->
+  <g transform="translate(902 196)">
+    <rect x="0" y="0" width="236" height="320" rx="48" fill="#f7f0e1" stroke="#c2aa80" stroke-width="3"/>
+    <circle cx="118" cy="74"  r="44" fill="#ae3a22"/>
+    <circle cx="118" cy="160" r="44" fill="#966211"/>
+    <circle cx="118" cy="246" r="44" fill="#3f7a3f"/>
+    <!-- soft highlight on the live (green) light -->
+    <circle cx="103" cy="231" r="13" fill="#ffffff" opacity="0.28"/>
+  </g>
+</svg>
