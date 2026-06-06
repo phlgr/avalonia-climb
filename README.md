@@ -30,22 +30,34 @@ stepped hour by hour:
   what keeps porous rock like sandstone unsafe for a day or more *after the
   surface looks dry*.
 
-Both reservoirs drain in proportion to **FAO-56 reference evapotranspiration
-(ET₀)** — the standard measure of evaporative demand from sun, temperature, wind
-and humidity, which Open-Meteo provides hourly. So the "🪨 likely dry around …"
-estimate reflects the actual forecast (a sunny, breezy day dries the rock far
-faster than a cold, damp one) rather than a fixed delay. Each rock type sets how
-rain splits between the two reservoirs and how fast each one dries; near
-freezing, evaporation is throttled.
+Both reservoirs drain in proportion to **reference evapotranspiration (ET₀)** —
+a standard index of evaporative demand from sun, temperature, wind and humidity,
+which Open-Meteo provides hourly. So the "🪨 likely dry around …" estimate
+reflects the actual forecast (a sunny, breezy day dries the rock far faster than
+a cold, damp one) rather than a fixed delay. Each rock type sets how rain splits
+between the two reservoirs and how fast each one dries; near freezing,
+evaporation is throttled.
+
+> **Note on ET₀:** FAO-56 defines ET₀ over a *grass reference surface* (an
+> agronomy/irrigation standard) — it is **not** a study of rock. We use it only
+> as a proxy for evaporative demand. The rock-specific behaviour rests on
+> porous-media evaporation physics and climbing-ethics guidance, not on FAO-56.
 
 **Citations**
 
-- Drying physics — FAO-56 Penman-Monteith reference evapotranspiration: Allen,
-  Pereira, Raes & Smith, *Crop evapotranspiration* (FAO Irrigation & Drainage
-  Paper 56, 1998) — <https://www.fao.org/4/x0490e/x0490e00.htm>.
-- Don't-climb-wet-rock ethic — BMC "Respect the Rock"
-  (<https://www.thebmc.co.uk/en/respect-the-rock>) and Access Fund's sandstone
-  guidance
+- Surface-evaporation physics — Penman (1948), *Natural evaporation from open
+  water, bare soil and grass*, Proc. R. Soc. A 193 — <https://doi.org/10.1098/rspa.1948.0037>.
+- Drying of porous rock — Or, Lehmann, Shahraeeni & Shokri (2013), *Advances in
+  Soil Evaporation Physics—A Review*, Vadose Zone Journal 12(4) —
+  <https://doi.org/10.2136/vzj2012.0163>.
+- ET₀ definition (the value pulled from Open-Meteo) — FAO-56, Allen et al. (1998)
+  — <https://www.fao.org/4/x0490e/x0490e00.htm>.
+- Wet sandstone strength loss (up to ~45% of compressive strength when saturated,
+  most within hours) — Tomor, Nichols & Orbán (2024), *Evaluation of the Loss of
+  Uniaxial Compressive Strength of Sandstones Due to Moisture*, Int. J.
+  Architectural Heritage 18(5) — <https://doi.org/10.1080/15583058.2023.2188313>.
+- Climbing ethic — BMC "Respect the Rock"
+  (<https://www.thebmc.co.uk/en/respect-the-rock>) and Access Fund
   (<https://www.accessfund.org/latest-news/open-gate-blog/how-to-assess-sandstone-after-rain-or-snow>).
 
 ### Point it at a different crag

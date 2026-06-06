@@ -60,7 +60,8 @@ const ROCK_PROFILES: Record<RockType, RockProfile> = {
     idealTempC: [5, 15],
     okTempC: [-2, 20],
     humidityGreasyPct: 75,
-    blurb: 'Never climb wet — holds snap and the rock is up to ~75% weaker when damp.',
+    blurb:
+      'Never climb wet — holds snap; sandstone can lose up to ~45% of its strength when saturated.',
   },
   gritstone: {
     absorptivity: 0.5,

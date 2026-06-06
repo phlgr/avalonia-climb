@@ -116,10 +116,17 @@ function MethodView() {
           </div>
         </div>
         <p>
-          Both drain in proportion to <strong>reference evapotranspiration (ET₀)</strong> &#8212;
-          the standard measure of how fast water evaporates given the sun, temperature, wind and
-          humidity in the forecast. So a warm, breezy, sunny day dries the rock far faster than a
-          cold, still, damp one, and near freezing the drying nearly stops.
+          Both drain in proportion to <strong>reference evapotranspiration (ET₀)</strong> &#8212; a
+          standard index of how hard the air is pulling moisture off a surface, computed from the
+          forecast's sun, temperature, wind and humidity. So a warm, breezy day dries the rock far
+          faster than a cold, still, damp one, and near freezing the drying nearly stops.
+        </p>
+        <p className="m-caveat">
+          <strong>Honest caveat:</strong> ET₀ is defined for a <em>grass</em> reference surface
+          (FAO-56), not rock &#8212; we borrow it only as a proxy for evaporative demand. The
+          rock-specific parts (how much rain soaks in, how slowly the core dries, &ldquo;never climb
+          it wet&rdquo;) rest on porous-media evaporation physics and climbing-ethics guidance, not
+          on the ET₀ standard itself.
         </p>
         <p>
           The &ldquo;🪨 likely dry around &hellip;&rdquo; estimate isn't a fixed delay &#8212; it's
@@ -159,32 +166,61 @@ function MethodView() {
         <h3>Sources</h3>
         <ul className="sources">
           <li>
+            <strong>Evaporation physics</strong> &#8212;{' '}
+            <a href="https://doi.org/10.1098/rspa.1948.0037" target="_blank" rel="noreferrer">
+              Penman (1948), <em>Natural evaporation from open water, bare soil and grass</em>
+            </a>
+            , Proc. R. Soc. A 193.
+          </li>
+          <li>
+            <strong>Drying of porous rock</strong> &#8212;{' '}
+            <a href="https://doi.org/10.2136/vzj2012.0163" target="_blank" rel="noreferrer">
+              Or, Lehmann, Shahraeeni &amp; Shokri (2013),{' '}
+              <em>Advances in Soil Evaporation Physics&mdash;A Review</em>
+            </a>
+            , Vadose Zone Journal 12(4).
+          </li>
+          <li>
+            <strong>ET₀ definition</strong> (the value we pull from Open-Meteo; a grass reference,
+            used here only as a proxy) &#8212;{' '}
             <a href="https://www.fao.org/4/x0490e/x0490e00.htm" target="_blank" rel="noreferrer">
-              FAO-56 Penman-Monteith reference evapotranspiration
-            </a>{' '}
-            &#8212; Allen, Pereira, Raes &amp; Smith (1998). The drying physics.
+              FAO-56, Allen et al. (1998)
+            </a>
+            .
           </li>
           <li>
+            <strong>Wet sandstone is weaker</strong> (up to ~45% loss of compressive strength when
+            saturated, most within hours) &#8212;{' '}
+            <a
+              href="https://doi.org/10.1080/15583058.2023.2188313"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Tomor, Nichols &amp; Orbán (2024)
+            </a>
+            , Int. J. Architectural Heritage 18(5).
+          </li>
+          <li>
+            <strong>Climbing ethic</strong> &#8212;{' '}
             <a href="https://www.thebmc.co.uk/en/respect-the-rock" target="_blank" rel="noreferrer">
-              BMC &mdash; Respect the Rock
+              BMC Respect the Rock
             </a>{' '}
-            &#8212; don't climb grit &amp; sandstone when wet.
-          </li>
-          <li>
+            &amp;{' '}
             <a
               href="https://www.accessfund.org/latest-news/open-gate-blog/how-to-assess-sandstone-after-rain-or-snow"
               target="_blank"
               rel="noreferrer"
             >
-              Access Fund &mdash; assessing sandstone after rain
+              Access Fund
             </a>
-            .
+            : don't climb grit &amp; sandstone when wet.
           </li>
           <li>
+            <strong>Data</strong> &#8212;{' '}
             <a href="https://open-meteo.com/en/docs" target="_blank" rel="noreferrer">
               Open-Meteo forecast API
             </a>{' '}
-            &#8212; weather &amp; ET₀ data.
+            (weather &amp; ET₀).
           </li>
         </ul>
       </section>
