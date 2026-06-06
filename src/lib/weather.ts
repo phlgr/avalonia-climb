@@ -12,6 +12,9 @@ const HOURLY_VARS = [
   'precipitation_probability',
   'wind_speed_10m',
   'weather_code',
+  // FAO-56 reference evapotranspiration (mm/h) — our measure of evaporative
+  // demand (sun + temp + wind + humidity), i.e. how fast the rock dries.
+  'et0_fao_evapotranspiration',
 ] as const
 
 export interface HourPoint {
@@ -25,11 +28,13 @@ export interface HourPoint {
   precipProb: number
   windKmh: number
   weatherCode: number
+  /** Reference evapotranspiration for the hour, mm — the rock's drying power. */
+  et0: number
 }
 
 export interface WeatherData {
   timezone: string
-  /** Chronological hourly points spanning the past 2 days through 7 days ahead. */
+  /** Chronological hourly points spanning the past 3 days through 7 days ahead. */
   hours: HourPoint[]
 }
 
@@ -43,6 +48,7 @@ interface OpenMeteoResponse {
     precipitation_probability: number[]
     wind_speed_10m: number[]
     weather_code: number[]
+    et0_fao_evapotranspiration: number[]
   }
 }
 
@@ -51,7 +57,7 @@ export async function fetchWeather(): Promise<WeatherData> {
     latitude: String(CRAG.latitude),
     longitude: String(CRAG.longitude),
     hourly: HOURLY_VARS.join(','),
-    past_days: '2',
+    past_days: '3',
     forecast_days: '7',
     timezone: 'auto',
     wind_speed_unit: 'kmh',
@@ -72,6 +78,7 @@ export async function fetchWeather(): Promise<WeatherData> {
     precipProb: h.precipitation_probability[i] ?? 0,
     windKmh: h.wind_speed_10m[i],
     weatherCode: h.weather_code[i],
+    et0: Math.max(0, h.et0_fao_evapotranspiration[i] ?? 0),
   }))
 
   return { timezone: data.timezone, hours }

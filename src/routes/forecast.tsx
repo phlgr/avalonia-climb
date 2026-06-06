@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { DayCard } from '../components/DayCard'
 import { ErrorBox, Legend, Loading } from '../components/Ui'
 import { activeRockProfile, CRAG } from '../config'
-import { buildForecast } from '../lib/scoring'
+import { buildForecast, computeWetness } from '../lib/scoring'
 import { todayLocalDate } from '../lib/time'
 import { useWeather } from '../lib/useWeather'
 
@@ -20,7 +20,8 @@ function ForecastView() {
   }
 
   const today = todayLocalDate()
-  const days = buildForecast(data.hours, rock, CRAG.dayStartHour, CRAG.dayEndHour, today)
+  const wet = computeWetness(data.hours, rock)
+  const days = buildForecast(data.hours, rock, CRAG.dayStartHour, CRAG.dayEndHour, today, wet)
 
   return (
     <section className="forecast">

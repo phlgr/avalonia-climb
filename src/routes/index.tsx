@@ -4,8 +4,8 @@ import { MetricGrid } from '../components/MetricGrid'
 import { LIGHT_TAGLINE, TrafficLight } from '../components/TrafficLight'
 import { ErrorBox, Legend, Loading } from '../components/Ui'
 import { activeRockProfile, CRAG } from '../config'
-import { assessHour, findNowIndex } from '../lib/scoring'
-import { localNowHourIso, todayLocalDate } from '../lib/time'
+import { assessHour, computeWetness, dryEta, findNowIndex } from '../lib/scoring'
+import { formatEta, localNowHourIso, todayLocalDate } from '../lib/time'
 import { useWeather } from '../lib/useWeather'
 
 export const Route = createFileRoute('/')({ component: NowView })
@@ -23,9 +23,11 @@ function NowView() {
 
   const nowIso = localNowHourIso()
   const today = todayLocalDate()
+  const wet = computeWetness(data.hours, rock)
   const idx = findNowIndex(data.hours, nowIso)
-  const now = assessHour(data.hours, idx, rock)
+  const now = assessHour(data.hours, idx, rock, wet)
   const point = data.hours[idx]
+  const eta = dryEta(data.hours, idx, rock, wet)
 
   const ticks: HourTick[] = data.hours
     .map((h, i) => ({ h, i }))
@@ -35,7 +37,7 @@ function NowView() {
     })
     .map(({ h, i }) => ({
       hour: Number(h.time.slice(11, 13)),
-      light: assessHour(data.hours, i, rock).light,
+      light: assessHour(data.hours, i, rock, wet).light,
       isNow: i === idx,
     }))
 
@@ -43,6 +45,13 @@ function NowView() {
     <section className="now">
       <TrafficLight light={now.light} score={now.score} />
       <p className="tagline">{LIGHT_TAGLINE[now.light]}</p>
+
+      {eta && (
+        <p className="eta">
+          🪨 Likely dry around <strong>{formatEta(eta.timeIso, today)}</strong>
+          <span className="eta-sub"> · ~{eta.hours}h of forecast drying</span>
+        </p>
+      )}
 
       <ul className="reasons">
         {now.reasons.map((r) => (

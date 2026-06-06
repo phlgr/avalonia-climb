@@ -14,11 +14,39 @@ while friction (cool temps, low humidity) decides between green and yellow.
 ## How it works
 
 - Weather comes from [Open-Meteo](https://open-meteo.com) (free, no API key). It
-  pulls the **past 2 days** so it knows whether the rock is still wet, plus a
+  pulls the **past 3 days** so it can model how wet the rock still is, plus a
   **7-day** hourly forecast.
 - `src/lib/scoring.ts` turns each hour into a light using the active rock profile.
 - `src/config.ts` holds the crag (coordinates + rock type) and a table of rock
-  profiles (drying time, wet-rock fragility, ideal temps, humidity sensitivity).
+  profiles (drying behaviour, wet-rock fragility, ideal temps, humidity sensitivity).
+
+### Drying model (the interesting bit)
+
+Instead of a naïve "hours since rain", drying is a **two-reservoir water balance**
+stepped hour by hour:
+
+- **Surface film** — rain that sits on the rock (slickness). Dries fast.
+- **Internal moisture** — rain that soaks into the pores. Dries slowly, and is
+  what keeps porous rock like sandstone unsafe for a day or more *after the
+  surface looks dry*.
+
+Both reservoirs drain in proportion to **FAO-56 reference evapotranspiration
+(ET₀)** — the standard measure of evaporative demand from sun, temperature, wind
+and humidity, which Open-Meteo provides hourly. So the "🪨 likely dry around …"
+estimate reflects the actual forecast (a sunny, breezy day dries the rock far
+faster than a cold, damp one) rather than a fixed delay. Each rock type sets how
+rain splits between the two reservoirs and how fast each one dries; near
+freezing, evaporation is throttled.
+
+**Citations**
+
+- Drying physics — FAO-56 Penman-Monteith reference evapotranspiration: Allen,
+  Pereira, Raes & Smith, *Crop evapotranspiration* (FAO Irrigation & Drainage
+  Paper 56, 1998) — <https://www.fao.org/4/x0490e/x0490e00.htm>.
+- Don't-climb-wet-rock ethic — BMC "Respect the Rock"
+  (<https://www.thebmc.co.uk/en/respect-the-rock>) and Access Fund's sandstone
+  guidance
+  (<https://www.accessfund.org/latest-news/open-gate-blog/how-to-assess-sandstone-after-rain-or-snow>).
 
 ### Point it at a different crag
 

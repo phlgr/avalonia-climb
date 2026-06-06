@@ -36,12 +36,29 @@ function RootLayout() {
           <strong>{CRAG.rock}</strong> · {rock.blurb}
         </p>
         <p className="muted">
-          Data from{' '}
+          Weather from{' '}
           <a href="https://open-meteo.com" target="_blank" rel="noreferrer">
             Open-Meteo
           </a>
-          . A hint, not a safety guarantee — always check the rock yourself.
+          . Drying model uses{' '}
+          <a href="https://www.fao.org/4/x0490e/x0490e00.htm" target="_blank" rel="noreferrer">
+            FAO-56 reference evapotranspiration (ET₀)
+          </a>
+          ; wet-rock ethic per{' '}
+          <a href="https://www.thebmc.co.uk/en/respect-the-rock" target="_blank" rel="noreferrer">
+            BMC
+          </a>{' '}
+          &amp;{' '}
+          <a
+            href="https://www.accessfund.org/latest-news/open-gate-blog/how-to-assess-sandstone-after-rain-or-snow"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Access Fund
+          </a>
+          .
         </p>
+        <p className="muted">A hint, not a safety guarantee — always check the rock yourself.</p>
       </footer>
     </div>
   )

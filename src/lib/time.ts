@@ -28,3 +28,10 @@ export function formatWindow(startHour: number, endHour: number): string {
   if (startHour === endHour) return `${startHour}:00`
   return `${startHour}:00–${endHour}:00`
 }
+
+/** "Today 14:00" / "Sat 14:00" label for a drying ETA timestamp. */
+export function formatEta(timeIso: string, today: string): string {
+  const hour = Number(timeIso.slice(11, 13))
+  const { weekday } = formatDayLabel(timeIso.slice(0, 10), today)
+  return `${weekday} ${pad(hour)}:00`
+}
