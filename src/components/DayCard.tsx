@@ -8,7 +8,7 @@ import { WeatherGlyph } from './WeatherGlyph'
 export function DayCard({ day, today }: { day: DayForecast; today: string }) {
   const { weekday, day: dom } = formatDayLabel(day.date, today, localeTag(), m.day_today())
   return (
-    <article className={`day day--${day.light}`} title={weatherLabel(day.weatherCode)}>
+    <article className={`day day--${day.light}`}>
       <WeatherGlyph code={day.weatherCode} className="day-glyph" />
       <div className="day-body">
         <div className="day-top">
@@ -16,15 +16,21 @@ export function DayCard({ day, today }: { day: DayForecast; today: string }) {
             <span className="day-weekday">{weekday}</span>
             <span className="day-dom">{dom}</span>
           </span>
-          <span className="day-verdict">{verdictWord(day.light)}</span>
+          <span className="day-grade">
+            <span className="day-verdict">{verdictWord(day.light)}</span>
+            <span className="day-score">{day.bestScore}</span>
+          </span>
         </div>
         <div className="day-stats">
+          <span>{weatherLabel(day.weatherCode)}</span>
           <span>
             <b>{Math.round(day.tMaxC)}°</b> {Math.round(day.tMinC)}°
           </span>
-          <span>{day.window ? formatWindow(day.window.startHour, day.window.endHour) : '—'}</span>
+          <span className="day-window">
+            {day.window ? formatWindow(day.window.startHour, day.window.endHour) : '—'}
+          </span>
           <span>
-            {day.precipMm} mm{day.maxPrecipProb > 0 ? ` ${day.maxPrecipProb}%` : ''}
+            {day.precipMm} mm{day.maxPrecipProb > 0 ? ` · ${day.maxPrecipProb}%` : ''}
           </span>
         </div>
       </div>
