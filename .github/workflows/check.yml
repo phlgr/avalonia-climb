@@ -1,0 +1,21 @@
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      - run: bun install --frozen-lockfile
+      # Generates src/routeTree.gen.ts (gitignored) via the router plugin, which
+      # typecheck and knip both need. Must run before them.
+      - run: bun run build
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun run knip
