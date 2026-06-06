@@ -49,11 +49,11 @@ function MethodView() {
           ))}
         </div>
         <p className="m-thresholds">
-          <span className="chip chip--green">🟢 {GREEN_MIN}–100</span>
+          <span className="chip chip--green">{GREEN_MIN}–100</span>
           <span className="chip chip--yellow">
-            🟡 {YELLOW_MIN}–{GREEN_MIN - 1}
+            {YELLOW_MIN}–{GREEN_MIN - 1}
           </span>
-          <span className="chip chip--red">🔴 0–{YELLOW_MIN - 1}</span>
+          <span className="chip chip--red">0–{YELLOW_MIN - 1}</span>
         </p>
         <p className="muted">{m.method_thresholds_note({ h: INCOMING_HOURS })}</p>
       </section>
