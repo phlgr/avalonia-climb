@@ -150,30 +150,50 @@ export function assessHour(
   return { light, score, reasons }
 }
 
-export interface DryEta {
-  /** Hours from `index` until the rock is climbable. */
+/**
+ * Is the rock unclimbable at hour `index`? Raining, slick surface, or (for
+ * fragile rock) saturated inside. Drives both the drying ETA and the dry window.
+ */
+function isWet(hours: HourPoint[], index: number, rock: RockProfile, wet: Wetness[]): boolean {
+  return (
+    hours[index].precipMm >= RAIN_MM ||
+    wet[index].surfaceWet ||
+    (rock.fragileWhenWet && wet[index].coreUnsafe)
+  )
+}
+
+/** A point in the future, expressed both as an hour offset and an ISO timestamp. */
+export interface ForecastPoint {
   hours: number
-  /** Local ISO timestamp it becomes climbable. */
   timeIso: string
 }
 
 /**
- * Forward-search for when the rock becomes climbable again. For fragile rock the
- * binding constraint is internal moisture; otherwise it's the slick surface.
- * Returns null if it's already dry, or if it won't dry within the forecast.
+ * Forward-search for when the rock becomes climbable again. Returns null if it's
+ * already climbable, or if it won't dry within the forecast.
  */
 export function dryEta(
   hours: HourPoint[],
   index: number,
   rock: RockProfile,
   wet: Wetness[],
-): DryEta | null {
-  const wetAt = (j: number) =>
-    hours[j].precipMm >= RAIN_MM || wet[j].surfaceWet || (rock.fragileWhenWet && wet[j].coreUnsafe)
-
-  if (!wetAt(index)) return null
+): ForecastPoint | null {
+  if (!isWet(hours, index, rock, wet)) return null
   for (let j = index + 1; j < hours.length; j++) {
-    if (!wetAt(j)) return { hours: j - index, timeIso: hours[j].time }
+    if (!isWet(hours, j, rock, wet)) return { hours: j - index, timeIso: hours[j].time }
+  }
+  return null
+}
+
+/** First hour at/after `index` when the rock goes wet again — i.e. the end of a dry window. */
+export function nextWet(
+  hours: HourPoint[],
+  index: number,
+  rock: RockProfile,
+  wet: Wetness[],
+): ForecastPoint | null {
+  for (let j = index + 1; j < hours.length; j++) {
+    if (isWet(hours, j, rock, wet)) return { hours: j - index, timeIso: hours[j].time }
   }
   return null
 }

@@ -4,7 +4,7 @@ import { MetricGrid } from '../components/MetricGrid'
 import { LIGHT_TAGLINE, TrafficLight } from '../components/TrafficLight'
 import { ErrorBox, Legend, Loading } from '../components/Ui'
 import { activeRockProfile, CRAG } from '../config'
-import { assessHour, computeWetness, dryEta, findNowIndex } from '../lib/scoring'
+import { assessHour, computeWetness, dryEta, findNowIndex, nextWet } from '../lib/scoring'
 import { formatEta, localNowHourIso, todayLocalDate } from '../lib/time'
 import { useWeather } from '../lib/useWeather'
 
@@ -27,7 +27,12 @@ function NowView() {
   const idx = findNowIndex(data.hours, nowIso)
   const now = assessHour(data.hours, idx, rock, wet)
   const point = data.hours[idx]
+
+  // Outlook: when it becomes climbable (if wet now), and when the upcoming dry
+  // window ends because rain returns — so a green light still warns of rain ahead.
   const eta = dryEta(data.hours, idx, rock, wet)
+  const climbableIdx = idx + (eta?.hours ?? 0)
+  const windowEnd = nextWet(data.hours, climbableIdx, rock, wet)
 
   const ticks: HourTick[] = data.hours
     .map((h, i) => ({ h, i }))
@@ -46,11 +51,24 @@ function NowView() {
       <TrafficLight light={now.light} score={now.score} />
       <p className="tagline">{LIGHT_TAGLINE[now.light]}</p>
 
-      {eta && (
+      {eta ? (
         <p className="eta">
           🪨 Likely dry around <strong>{formatEta(eta.timeIso, today)}</strong>
-          <span className="eta-sub"> · ~{eta.hours}h of forecast drying</span>
+          <span className="eta-sub">
+            {windowEnd
+              ? windowEnd.hours <= 6
+                ? ` · only a brief window — rain back ${formatEta(windowEnd.timeIso, today)}`
+                : ` · then good until ~${formatEta(windowEnd.timeIso, today)}, when rain returns`
+              : ' · dry spell after that'}
+          </span>
         </p>
+      ) : windowEnd ? (
+        <p className="eta">
+          ☔ Rain returns <strong>{formatEta(windowEnd.timeIso, today)}</strong>
+          <span className="eta-sub"> (~{windowEnd.hours}h) — climb before then</span>
+        </p>
+      ) : (
+        <p className="eta">☀️ No rain in the 7-day forecast — go climbing</p>
       )}
 
       <ul className="reasons">
