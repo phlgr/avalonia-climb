@@ -3,12 +3,32 @@ import type { HourPoint } from './weather'
 
 export type Light = 'green' | 'yellow' | 'red'
 
+/**
+ * A reason is a language-neutral code plus any numbers to interpolate. The UI
+ * turns it into a localized string, so the scoring stays free of display text.
+ */
+export type Reason =
+  | { code: 'rainingNow' }
+  | { code: 'wetInside' }
+  | { code: 'wetInsideWait' }
+  | { code: 'tempPrime'; temp: number }
+  | { code: 'tempCold'; temp: number }
+  | { code: 'tempHot'; temp: number }
+  | { code: 'tempWarm'; temp: number }
+  | { code: 'tempCool'; temp: number }
+  | { code: 'airDry'; rh: number }
+  | { code: 'airHumid'; rh: number }
+  | { code: 'surfaceDamp' }
+  | { code: 'rockDry' }
+  | { code: 'windStrong'; wind: number }
+  | { code: 'rainSoon'; hours: number }
+
 export interface Assessment {
   light: Light
   /** 0–100 overall conditions score (only meaningful when not a hard red). */
   score: number
-  /** Ordered, human-readable explanations — most important first. */
-  reasons: string[]
+  /** Ordered reasons (language-neutral codes), most important first. */
+  reasons: Reason[]
 }
 
 const RAIN_MM = 0.2 // per-hour precip considered enough to wet the rock
@@ -109,16 +129,13 @@ export function assessHour(
 
   // ── Hard reds: nothing about nice air overrides active rain or wet fragile rock.
   if (rainingNow) {
-    return { light: 'red', score: 0, reasons: ['Raining now — rock is wet'] }
+    return { light: 'red', score: 0, reasons: [{ code: 'rainingNow' }] }
   }
   if (rock.fragileWhenWet && w.coreUnsafe) {
     return {
       light: 'red',
       score: 0,
-      reasons: [
-        'Rock still wet inside — climbing it now breaks holds and damages the crag',
-        'Internal moisture lingers after the surface looks dry — wait for it to clear',
-      ],
+      reasons: [{ code: 'wetInside' }, { code: 'wetInsideWait' }],
     }
   }
 
@@ -137,24 +154,25 @@ export function assessHour(
   )
 
   // ── Reasons, most decisive first.
-  const reasons: string[] = []
+  const reasons: Reason[] = []
   const [okLo, okHi] = rock.okTempC
-  if (tScore >= 0.85) reasons.push(`Prime friction temps (${Math.round(p.tempC)}°C)`)
-  else if (p.tempC < okLo) reasons.push(`Bitterly cold (${Math.round(p.tempC)}°C)`)
-  else if (p.tempC > okHi) reasons.push(`Too warm for friction (${Math.round(p.tempC)}°C)`)
-  else if (p.tempC > rock.idealTempC[1]) reasons.push(`A bit warm (${Math.round(p.tempC)}°C)`)
-  else reasons.push(`Cool-ish (${Math.round(p.tempC)}°C)`)
+  const temp = Math.round(p.tempC)
+  if (tScore >= 0.85) reasons.push({ code: 'tempPrime', temp })
+  else if (p.tempC < okLo) reasons.push({ code: 'tempCold', temp })
+  else if (p.tempC > okHi) reasons.push({ code: 'tempHot', temp })
+  else if (p.tempC > rock.idealTempC[1]) reasons.push({ code: 'tempWarm', temp })
+  else reasons.push({ code: 'tempCool', temp })
 
-  if (hScore >= 0.8) reasons.push(`Dry air (${p.humidity}% RH) — grippy`)
-  else if (hScore <= 0.45) reasons.push(`Humid (${p.humidity}% RH) — holds may feel greasy`)
+  if (hScore >= 0.8) reasons.push({ code: 'airDry', rh: p.humidity })
+  else if (hScore <= 0.45) reasons.push({ code: 'airHumid', rh: p.humidity })
 
-  if (w.surfaceWet) reasons.push('Surface still damp — drying out')
-  else reasons.push('Rock is dry')
+  if (w.surfaceWet) reasons.push({ code: 'surfaceDamp' })
+  else reasons.push({ code: 'rockDry' })
 
-  if (wScore <= 0.5) reasons.push(`Strong wind (${Math.round(p.windKmh)} km/h)`)
+  if (wScore <= 0.5) reasons.push({ code: 'windStrong', wind: Math.round(p.windKmh) })
 
   const soon = rainSoonMm(hours, index, INCOMING_HOURS)
-  if (soon >= RAIN_MM) reasons.push(`Rain expected within ${INCOMING_HOURS}h`)
+  if (soon >= RAIN_MM) reasons.push({ code: 'rainSoon', hours: INCOMING_HOURS })
 
   // ── Light. Slick surface or incoming rain can't be green.
   let light: Light = score >= GREEN_MIN ? 'green' : score >= YELLOW_MIN ? 'yellow' : 'red'

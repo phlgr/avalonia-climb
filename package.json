@@ -4,13 +4,14 @@
   "type": "module",
   "description": "Bouldering go/no-go traffic light + 7-day forecast for the Avalonia crag",
   "scripts": {
+    "i18n": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy localStorage preferredLanguage baseLocale --emit-ts-declarations",
     "dev": "vite",
-    "build": "vite build",
+    "build": "bun run i18n && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "bun run i18n && tsc --noEmit",
     "lint": "biome check .",
     "format": "biome check --write .",
-    "knip": "knip"
+    "knip": "bun run i18n && knip"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
+    "@inlang/paraglide-js": "^2.18.2",
     "@tanstack/router-plugin": "^1.168.13",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.16",

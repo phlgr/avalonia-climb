@@ -55,8 +55,16 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  row-gap: 12px;
+  flex-wrap: wrap;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--line);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .brand {
@@ -111,6 +119,32 @@ a {
 }
 
 .nav a.active {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.lang {
+  display: flex;
+  gap: 2px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 6px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.lang-btn.active {
   background: var(--panel-2);
   color: var(--text);
 }

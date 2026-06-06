@@ -84,16 +84,16 @@ export async function fetchWeather(): Promise<WeatherData> {
   return { timezone: data.timezone, hours }
 }
 
-/** WMO weather-code → short label + emoji, for the forecast cards. */
-export function describeWeatherCode(code: number): { label: string; icon: string } {
-  if (code === 0) return { label: 'Clear', icon: '☀️' }
-  if (code <= 2) return { label: 'Partly cloudy', icon: '🌤️' }
-  if (code === 3) return { label: 'Overcast', icon: '☁️' }
-  if (code <= 48) return { label: 'Fog', icon: '🌫️' }
-  if (code <= 57) return { label: 'Drizzle', icon: '🌦️' }
-  if (code <= 67) return { label: 'Rain', icon: '🌧️' }
-  if (code <= 77) return { label: 'Snow', icon: '🌨️' }
-  if (code <= 82) return { label: 'Rain showers', icon: '🌧️' }
-  if (code <= 86) return { label: 'Snow showers', icon: '🌨️' }
-  return { label: 'Thunderstorm', icon: '⛈️' }
+/** WMO weather-code → emoji (language-neutral). Labels are localized in src/i18n.ts. */
+export function weatherIcon(code: number): string {
+  if (code === 0) return '☀️'
+  if (code <= 2) return '🌤️'
+  if (code === 3) return '☁️'
+  if (code <= 48) return '🌫️'
+  if (code <= 57) return '🌦️'
+  if (code <= 67) return '🌧️'
+  if (code <= 77) return '🌨️'
+  if (code <= 82) return '🌧️'
+  if (code <= 86) return '🌨️'
+  return '⛈️'
 }

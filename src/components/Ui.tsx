@@ -1,10 +1,11 @@
+import { m } from '../paraglide/messages.js'
 import { LightDot } from './TrafficLight'
 
 export function Loading() {
   return (
     <div className="state">
       <div className="spinner" />
-      <p>Reading the sky…</p>
+      <p>{m.state_loading()}</p>
     </div>
   )
 }
@@ -12,10 +13,10 @@ export function Loading() {
 export function ErrorBox({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="state state--error">
-      <p className="state-title">Couldn't load conditions</p>
+      <p className="state-title">{m.state_error()}</p>
       <p className="muted">{message}</p>
       <button type="button" className="btn" onClick={onRetry}>
-        Try again
+        {m.state_retry()}
       </button>
     </div>
   )
@@ -25,13 +26,13 @@ export function Legend() {
   return (
     <div className="legend">
       <span>
-        <LightDot light="green" size={10} /> good
+        <LightDot light="green" size={10} /> {m.legend_good()}
       </span>
       <span>
-        <LightDot light="yellow" size={10} /> marginal
+        <LightDot light="yellow" size={10} /> {m.legend_marginal()}
       </span>
       <span>
-        <LightDot light="red" size={10} /> no-go
+        <LightDot light="red" size={10} /> {m.legend_nogo()}
       </span>
     </div>
   )
