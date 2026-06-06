@@ -4,9 +4,10 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 
-// GitHub Pages project site is served from /<repo>/. Change to '/' for a custom
-// domain or user/org page. The router reads this back via import.meta.env.BASE_URL.
-const BASE = '/avalonia-climb/'
+// Served at the root of the custom domain isavaloniadry.gartz.dev (see public/CNAME),
+// so the base is '/'. For a project page without a custom domain this would be
+// '/<repo>/'. The router reads this back via import.meta.env.BASE_URL.
+const BASE = '/'
 
 // GitHub Pages has no SPA server fallback: a hard refresh on /forecast 404s.
 // Copying index.html to 404.html after the build lets the client router take over.

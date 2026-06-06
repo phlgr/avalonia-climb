@@ -59,7 +59,7 @@ penalty; granite/gneiss/basalt dry fast.
 
 ```sh
 bun install
-bun run dev        # http://localhost:5173/avalonia-climb/
+bun run dev        # http://localhost:5173/
 bun run build      # production build into dist/
 bun run preview    # serve the production build
 bun run typecheck  # tsc --noEmit
@@ -72,11 +72,14 @@ Tooling: **Bun · Vite · TanStack Router + Query · Biome · Knip · Lefthook**
 ## Deploy (GitHub Pages)
 
 Pushing to `main` runs `.github/workflows/deploy.yml`, which builds and publishes
-`dist/` to GitHub Pages. The site is served from `/<repo>/`, so `vite.config.ts`
-sets `base = '/avalonia-climb/'` (change it for a custom domain). A `404.html`
-copy of `index.html` is emitted so client-side routes survive a hard refresh.
+`dist/` to GitHub Pages. The site is served at the custom domain
+**isavaloniadry.gartz.dev** (`public/CNAME`), so `vite.config.ts` sets
+`base = '/'`. A `404.html` copy of `index.html` is emitted so client-side routes
+survive a hard refresh.
 
-To enable: repo **Settings → Pages → Source: GitHub Actions**.
+Custom-domain DNS: a `CNAME` record `isavaloniadry` → `phlgr.github.io` in the
+`gartz.dev` zone. To enable Pages: repo **Settings → Pages → Source: GitHub
+Actions** (already configured).
 
 > A hint, not a safety guarantee. Conditions models are approximate — always
 > check the actual rock before you climb, especially after rain.
