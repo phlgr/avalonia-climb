@@ -53,24 +53,32 @@ function NowView() {
       <p className="tagline">{lightTagline(now.light)}</p>
 
       {eta ? (
-        <p className="eta">
-          🪨 {m.outlook_dry_around({ label: etaLabel(eta.timeIso) })}
-          <span className="eta-sub">
-            {' · '}
-            {windowEnd
-              ? windowEnd.hours <= 6
-                ? m.outlook_window_brief({ label: etaLabel(windowEnd.timeIso) })
-                : m.outlook_window_good({ label: etaLabel(windowEnd.timeIso) })
-              : m.outlook_dry_spell()}
-          </span>
-        </p>
+        <div className="outlook outlook--warn">
+          <span className="outlook-key">{m.now_outlook()}</span>
+          <p className="outlook-body">
+            {m.outlook_dry_around({ label: etaLabel(eta.timeIso) })}{' '}
+            <span className="outlook-sub">
+              —{' '}
+              {windowEnd
+                ? windowEnd.hours <= 6
+                  ? m.outlook_window_brief({ label: etaLabel(windowEnd.timeIso) })
+                  : m.outlook_window_good({ label: etaLabel(windowEnd.timeIso) })
+                : m.outlook_dry_spell()}
+            </span>
+          </p>
+        </div>
       ) : windowEnd ? (
-        <p className="eta">
-          ☔{' '}
-          {m.outlook_rain_returns({ label: etaLabel(windowEnd.timeIso), hours: windowEnd.hours })}
-        </p>
+        <div className="outlook outlook--warn">
+          <span className="outlook-key">{m.now_outlook()}</span>
+          <p className="outlook-body">
+            {m.outlook_rain_returns({ label: etaLabel(windowEnd.timeIso), hours: windowEnd.hours })}
+          </p>
+        </div>
       ) : (
-        <p className="eta">☀️ {m.outlook_no_rain()}</p>
+        <div className="outlook outlook--good">
+          <span className="outlook-key">{m.now_outlook()}</span>
+          <p className="outlook-body">{m.outlook_no_rain()}</p>
+        </div>
       )}
 
       <ul className="reasons">

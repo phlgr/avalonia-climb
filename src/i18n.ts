@@ -34,6 +34,15 @@ export function lightLabel(light: Light): string {
   return light === 'green' ? m.light_green() : light === 'yellow' ? m.light_yellow() : m.light_red()
 }
 
+/** One-word answer to "is it climbable right now?" — the hero verdict. */
+export function verdictWord(light: Light): string {
+  return light === 'green'
+    ? m.verdict_go()
+    : light === 'yellow'
+      ? m.verdict_almost()
+      : m.verdict_no()
+}
+
 export function lightTagline(light: Light): string {
   return light === 'green'
     ? m.tagline_green()
