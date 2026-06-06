@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { DayCard } from '../components/DayCard'
-import { ErrorBox, Legend, Loading } from '../components/Ui'
+import { ErrorBox, Loading, VerdictKey } from '../components/Ui'
 import { activeRockProfile, CRAG } from '../config'
 import { buildForecast, computeWetness } from '../lib/scoring'
 import { todayLocalDate } from '../lib/time'
@@ -37,7 +37,7 @@ function ForecastView() {
           <DayCard key={d.date} day={d} today={today} />
         ))}
       </div>
-      <Legend />
+      <VerdictKey />
     </section>
   )
 }
