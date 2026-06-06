@@ -124,9 +124,49 @@ const HOURS: HourTick[] = [
   ['red', 19],
 ].map(([light, hour]) => ({ light: light as Light, hour: hour as number, isNow: hour === 13 }))
 
+// Styling lives here (not in styles.css) so it ships only with the dev gallery.
+const PREVIEW_CSS = `
+.preview { display: flex; flex-direction: column; }
+.preview-state {
+  position: relative;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--paper-card) 55%, transparent);
+}
+.preview-tag {
+  display: inline-block;
+  margin: 0.6rem 0 0.2rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.preview-tag--green { color: var(--go); }
+.preview-tag--yellow { color: var(--almost); }
+.preview-tag--red { color: var(--no); }
+@media (prefers-reduced-motion: no-preference) {
+  .preview > * { animation: rise 0.5s both cubic-bezier(0.22, 1, 0.36, 1); }
+  .preview > :nth-child(2) { animation-delay: 0.06s; }
+  .preview > :nth-child(3) { animation-delay: 0.12s; }
+  .preview > :nth-child(n + 4) { animation-delay: 0.18s; }
+}
+`
+
 function PreviewView() {
+  // Dev-only gallery: in a production build `import.meta.env.DEV` is statically
+  // false, so everything below is dead code and rollup tree-shakes it (plus the
+  // mock data and PREVIEW_CSS) out of the bundle. The route stays registered so
+  // types resolve.
+  if (!import.meta.env.DEV) return null
   return (
     <div className="preview">
+      <style>{PREVIEW_CSS}</style>
       <div className="section-head">
         <h2>Verdict states</h2>
       </div>

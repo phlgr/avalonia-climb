@@ -984,44 +984,37 @@ a:hover {
 @media (prefers-reduced-motion: no-preference) {
   .now > *,
   .forecast > *,
-  .method > *,
-  .preview > * {
+  .method > * {
     animation: rise 0.5s both cubic-bezier(0.22, 1, 0.36, 1);
   }
   .now > :nth-child(1),
   .forecast > :nth-child(1),
-  .method > :nth-child(1),
-  .preview > :nth-child(1) {
+  .method > :nth-child(1) {
     animation-delay: 0.02s;
   }
   .now > :nth-child(2),
   .forecast > :nth-child(2),
-  .method > :nth-child(2),
-  .preview > :nth-child(2) {
+  .method > :nth-child(2) {
     animation-delay: 0.08s;
   }
   .now > :nth-child(3),
   .forecast > :nth-child(3),
-  .method > :nth-child(3),
-  .preview > :nth-child(3) {
+  .method > :nth-child(3) {
     animation-delay: 0.14s;
   }
   .now > :nth-child(4),
   .forecast > :nth-child(4),
-  .method > :nth-child(4),
-  .preview > :nth-child(4) {
+  .method > :nth-child(4) {
     animation-delay: 0.2s;
   }
   .now > :nth-child(5),
   .forecast > :nth-child(5),
-  .method > :nth-child(5),
-  .preview > :nth-child(5) {
+  .method > :nth-child(5) {
     animation-delay: 0.26s;
   }
   .now > :nth-child(n + 6),
   .forecast > :nth-child(n + 6),
-  .method > :nth-child(n + 6),
-  .preview > :nth-child(n + 6) {
+  .method > :nth-child(n + 6) {
     animation-delay: 0.32s;
   }
   .gauge-fill {
@@ -1253,41 +1246,6 @@ a:hover {
     fill: #cfc7d6;
     stroke: #cfc7d6;
   }
-}
-
-/* ── Preview gallery (dev) ─────────────────────────────────────────────── */
-.preview {
-  display: flex;
-  flex-direction: column;
-}
-.preview-state {
-  position: relative;
-  margin-top: 0.5rem;
-  padding: 0.5rem 1rem 1.25rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--paper-card) 55%, transparent);
-}
-.preview-tag {
-  display: inline-block;
-  margin: 0.6rem 0 0.2rem;
-  padding: 3px 9px;
-  border-radius: 999px;
-  border: 1px solid currentColor;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.preview-tag--green {
-  color: var(--go);
-}
-.preview-tag--yellow {
-  color: var(--almost);
-}
-.preview-tag--red {
-  color: var(--no);
 }
 
 /* ── Narrow phones ─────────────────────────────────────────────────────── */
