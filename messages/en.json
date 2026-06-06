@@ -75,6 +75,7 @@
   "footer_modelled": "Conditions are modelled, not measured —",
   "footer_method_link": "how it works & sources",
   "footer_disclaimer": "A hint, not a safety guarantee — always check the rock yourself.",
+  "footer_source": "Source on GitHub",
   "method_title": "How we decide",
   "method_lead": "Every hour we grab the forecast for {name}, figure out how wet the rock is, and rate conditions from 0–100. That score is the light. The numbers are set for {rock}, the rock you actually climb, and the drying runs on real physics instead of a flat “wait a day after rain” rule. Take it as a hint, not a promise.",
   "method_s1h": "1 · The verdict",
