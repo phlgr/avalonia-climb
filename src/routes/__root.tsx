@@ -24,6 +24,9 @@ function RootLayout() {
           <Link to="/forecast" activeProps={{ className: 'active' }}>
             7-day
           </Link>
+          <Link to="/method" activeProps={{ className: 'active' }}>
+            Method
+          </Link>
         </nav>
       </header>
 

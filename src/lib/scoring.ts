@@ -12,10 +12,17 @@ export interface Assessment {
 }
 
 const RAIN_MM = 0.2 // per-hour precip considered enough to wet the rock
-const INCOMING_HOURS = 3 // look-ahead window for imminent rain
 const SURFACE_WET_MM = 0.1 // surface film above this reads as damp/slick
 const FILM_FULL_MM = 1.5 // surface film at which dryness score bottoms out
 const FREEZE_EVAP_FACTOR = 0.15 // evaporation nearly stops at/below freezing
+
+/** Look-ahead window (hours) for warning about imminent rain. */
+export const INCOMING_HOURS = 3
+/** Relative weight of each factor in the 0–100 conditions score (sums to 1). */
+export const SCORE_WEIGHTS = { temp: 0.35, humidity: 0.25, dryness: 0.3, wind: 0.1 } as const
+/** Score at/above which the light is green; at/above YELLOW_MIN it's yellow; below, red. */
+export const GREEN_MIN = 68
+export const YELLOW_MIN = 45
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n))
 
@@ -121,7 +128,13 @@ export function assessHour(
   const wScore = windScore(p.windKmh)
   const dryScore = w.surfaceWet ? clamp01(1 - w.surfaceMm / FILM_FULL_MM) : 1
 
-  const score = Math.round(100 * (0.35 * tScore + 0.25 * hScore + 0.3 * dryScore + 0.1 * wScore))
+  const score = Math.round(
+    100 *
+      (SCORE_WEIGHTS.temp * tScore +
+        SCORE_WEIGHTS.humidity * hScore +
+        SCORE_WEIGHTS.dryness * dryScore +
+        SCORE_WEIGHTS.wind * wScore),
+  )
 
   // ── Reasons, most decisive first.
   const reasons: string[] = []
@@ -144,7 +157,7 @@ export function assessHour(
   if (soon >= RAIN_MM) reasons.push(`Rain expected within ${INCOMING_HOURS}h`)
 
   // ── Light. Slick surface or incoming rain can't be green.
-  let light: Light = score >= 68 ? 'green' : score >= 45 ? 'yellow' : 'red'
+  let light: Light = score >= GREEN_MIN ? 'green' : score >= YELLOW_MIN ? 'yellow' : 'red'
   if (light === 'green' && (w.surfaceWet || soon >= RAIN_MM)) light = 'yellow'
 
   return { light, score, reasons }
