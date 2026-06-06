@@ -3,6 +3,7 @@ import { HourlyStrip, type HourTick } from '../components/HourlyStrip'
 import { MetricGrid } from '../components/MetricGrid'
 import { TrafficLight } from '../components/TrafficLight'
 import { ErrorBox, Legend, Loading } from '../components/Ui'
+import { WeatherGlyph } from '../components/WeatherGlyph'
 import { activeRockProfile, CRAG } from '../config'
 import { lightTagline, localeTag, reasonText } from '../i18n'
 import { assessHour, computeWetness, dryEta, findNowIndex, nextWet } from '../lib/scoring'
@@ -54,7 +55,7 @@ function NowView() {
 
       {eta ? (
         <div className="outlook outlook--warn">
-          <span className="outlook-key">{m.now_outlook()}</span>
+          <WeatherGlyph code={2} className="outlook-glyph" />
           <p className="outlook-body">
             {m.outlook_dry_around({ label: etaLabel(eta.timeIso) })}{' '}
             <span className="outlook-sub">
@@ -68,15 +69,15 @@ function NowView() {
           </p>
         </div>
       ) : windowEnd ? (
-        <div className="outlook outlook--warn">
-          <span className="outlook-key">{m.now_outlook()}</span>
+        <div className="outlook outlook--bad">
+          <WeatherGlyph code={61} className="outlook-glyph" />
           <p className="outlook-body">
             {m.outlook_rain_returns({ label: etaLabel(windowEnd.timeIso), hours: windowEnd.hours })}
           </p>
         </div>
       ) : (
         <div className="outlook outlook--good">
-          <span className="outlook-key">{m.now_outlook()}</span>
+          <WeatherGlyph code={0} className="outlook-glyph" />
           <p className="outlook-body">{m.outlook_no_rain()}</p>
         </div>
       )}
