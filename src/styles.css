@@ -361,11 +361,12 @@ a:hover {
   color: var(--ink-soft);
 }
 
-/* Score gauge */
+/* Score gauge — secondary to the wet/dry verdict, kept compact and quiet. */
 .score {
   width: 100%;
-  max-width: 22rem;
-  margin: 1.35rem auto 0;
+  max-width: 15rem;
+  margin: 1.1rem auto 0;
+  opacity: 0.9;
 }
 .score-row {
   display: flex;
@@ -382,9 +383,9 @@ a:hover {
   color: var(--ink-faint);
 }
 .score-num {
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  color: var(--ink);
+  color: var(--ink-soft);
 }
 .score-num small {
   color: var(--ink-faint);
@@ -392,7 +393,7 @@ a:hover {
 }
 .gauge {
   position: relative;
-  height: 8px;
+  height: 6px;
   background: var(--paper-sunk);
   border: 1px solid var(--line);
   border-radius: 999px;

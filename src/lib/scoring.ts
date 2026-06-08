@@ -196,11 +196,16 @@ export function assessHour(
       breakdown: { ...breakdown, override: 'rainingNow' },
     }
   }
-  if (rock.fragileWhenWet && w.coreUnsafe) {
+  // Fragile rock (sandstone/grit/conglomerate) must never be climbed damp —
+  // wet holds snap and the crag scars. Any moisture, internal or on the
+  // surface, is a hard NO, regardless of how nice the air is.
+  if (rock.fragileWhenWet && (w.coreUnsafe || w.surfaceWet)) {
     return {
       light: 'red',
       score: 0,
-      reasons: [{ code: 'wetInside' }, { code: 'wetInsideWait' }],
+      reasons: w.coreUnsafe
+        ? [{ code: 'wetInside' }, { code: 'wetInsideWait' }]
+        : [{ code: 'surfaceDamp' }],
       breakdown: { ...breakdown, override: 'wetInside' },
     }
   }
@@ -226,8 +231,11 @@ export function assessHour(
   const soon = rainSoonMm(hours, index, INCOMING_HOURS)
   if (soon >= RAIN_MM) reasons.push({ code: 'rainSoon', hours: INCOMING_HOURS })
 
-  // ── Light. Slick surface or incoming rain can't be green.
-  let light: Light = score >= GREEN_MIN ? 'green' : score >= YELLOW_MIN ? 'yellow' : 'red'
+  // ── It's dry, so it's climbable: being dry is never on its own a reason to
+  // stay off. Friction quality only decides good (green) vs marginal (yellow);
+  // a slick surface (on rock that's sound when wet) or incoming rain holds it
+  // to marginal, but never red — only wet rock is a hard no.
+  let light: Light = score >= GREEN_MIN ? 'green' : 'yellow'
   if (light === 'green' && (w.surfaceWet || soon >= RAIN_MM)) light = 'yellow'
 
   return { light, score, reasons, breakdown }
