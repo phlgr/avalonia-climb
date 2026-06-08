@@ -68,6 +68,13 @@ export const SCORE_WEIGHTS = { temp: 0.35, humidity: 0.25, dryness: 0.3, wind: 0
 /** Score at/above which the light is green; at/above YELLOW_MIN it's yellow; below, red. */
 export const GREEN_MIN = 68
 export const YELLOW_MIN = 45
+/**
+ * Shortest contiguous run of non-red daylight hours that counts as a usable
+ * session. A day's verdict comes from its best *qualifying* window — so a brief
+ * gap between showers (the rock momentarily reads dry) can't make a rainy day
+ * look like a "maybe". Below this, the day is a hard red.
+ */
+const MIN_WINDOW_HOURS = 3
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n))
 
@@ -330,32 +337,49 @@ export function buildForecast(
     })
     if (dayHours.length === 0) continue
 
-    let best: Assessment | null = null
-    let bestHour = dayStart
-    const lights: { hour: number; light: Light }[] = []
-    for (const i of dayHours) {
-      const a = assessHour(hours, i, rock, wet)
-      const hour = Number(hours[i].time.slice(11, 13))
-      lights.push({ hour, light: a.light })
-      if (!best || a.score > best.score) {
-        best = a
-        bestHour = hour
-      }
-    }
+    const assessed = dayHours.map((i) => ({
+      hour: Number(hours[i].time.slice(11, 13)),
+      a: assessHour(hours, i, rock, wet),
+    }))
 
-    // Longest contiguous run of non-red hours, biased toward the best hour.
-    let window: DayForecast['window'] = null
-    let runStart: number | null = null
-    for (let k = 0; k <= lights.length; k++) {
-      const ok = k < lights.length && lights[k].light !== 'red'
-      if (ok && runStart === null) runStart = lights[k].hour
-      if (!ok && runStart !== null) {
-        const end = lights[k - 1].hour
-        if (runStart <= bestHour && bestHour <= end) window = { startHour: runStart, endHour: end }
-        else if (!window) window = { startHour: runStart, endHour: end }
-        runStart = null
-      }
+    // Group daylight into contiguous non-red runs, then keep only those long
+    // enough to be a real session (MIN_WINDOW_HOURS). The day's verdict is the
+    // best hour of the strongest qualifying window — a lone good hour between
+    // showers no longer speaks for the whole day.
+    interface Run {
+      startHour: number
+      endHour: number
+      length: number
+      best: Assessment
     }
+    const runs: Run[] = []
+    let current: { hour: number; a: Assessment }[] = []
+    const flush = () => {
+      if (current.length === 0) return
+      const best = current.reduce((m, x) => (x.a.score > m.a.score ? x : m)).a
+      runs.push({
+        startHour: current[0].hour,
+        endHour: current[current.length - 1].hour,
+        length: current.length,
+        best,
+      })
+      current = []
+    }
+    for (const x of assessed) {
+      if (x.a.light === 'red') flush()
+      else current.push(x)
+    }
+    flush()
+
+    const qualifying = runs.filter((r) => r.length >= MIN_WINDOW_HOURS)
+    const chosen = qualifying.reduce<Run | null>(
+      (m, r) => (!m || r.best.score > m.best.score ? r : m),
+      null,
+    )
+    const best = chosen ? chosen.best : null
+    const window: DayForecast['window'] = chosen
+      ? { startHour: chosen.startHour, endHour: chosen.endHour }
+      : null
 
     const temps = dayHours.map((i) => hours[i].tempC)
     const allDay = indices // full day for precip totals

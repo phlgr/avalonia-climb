@@ -399,6 +399,7 @@ a:hover {
   overflow: hidden;
 }
 .gauge-fill {
+  display: block;
   height: 100%;
   border-radius: 999px;
   transform-origin: left;
