@@ -1,8 +1,8 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "includes": ["**", "!src/routeTree.gen.ts", "!src/paraglide", "!dist"]
+    "includes": ["**", "!src/routeTree.gen.ts", "!src/paraglide", "!dist", "!og.source.svg"]
   },
   "formatter": {
     "enabled": true,
@@ -12,7 +12,7 @@
   },
   "linter": {
     "enabled": true,
-    "rules": { "recommended": true }
+    "rules": { "preset": "recommended" }
   },
   "javascript": {
     "formatter": { "quoteStyle": "single", "semicolons": "asNeeded", "trailingCommas": "all" }
