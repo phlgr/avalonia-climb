@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",
-    "@inlang/paraglide-js": "2.25.0",
+    "@inlang/paraglide-js": "2.25.1",
     "@tanstack/router-plugin": "1.168.36",
     "@types/node": "26.5.0",
     "@types/react": "19.2.18",
