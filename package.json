@@ -26,7 +26,7 @@
     "@biomejs/biome": "2.5.15",
     "@inlang/paraglide-js": "2.25.4",
     "@tanstack/router-plugin": "1.168.42",
-    "@types/node": "26.6.3",
+    "@types/node": "26.6.4",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.1",
