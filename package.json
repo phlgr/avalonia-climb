@@ -23,7 +23,7 @@
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
+    "@biomejs/biome": "2.6.2",
     "@inlang/paraglide-js": "2.29.1",
     "@tanstack/router-plugin": "1.168.47",
     "@types/node": "26.6.5",
