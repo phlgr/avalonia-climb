@@ -9,7 +9,6 @@ export const Route = createRootRoute({ component: RootLayout })
 /** Topographic-peak mark — nested contour rings, echoing a crag topo. */
 function TopoMark() {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative brand mark beside the visible name
     <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
       <ellipse cx="16" cy="18" rx="12" ry="8.5" />
       <ellipse cx="16" cy="16.5" rx="7.5" ry="5.5" />
@@ -21,7 +20,6 @@ function TopoMark() {
 /** Little mountaineering glyphs for the bottom tabs. */
 function TabIcon({ name }: { name: 'now' | 'forecast' | 'method' }) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative; the tab label sits beside it
     <svg
       className="tab-icon"
       viewBox="0 0 24 24"

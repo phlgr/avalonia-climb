@@ -8,7 +8,6 @@ import type { Light } from '../lib/scoring'
  */
 export function CragScene({ light }: { light: Light }) {
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative scene; verdict is announced in text
     <svg
       className={`scene scene--${light}`}
       viewBox="0 0 320 172"
