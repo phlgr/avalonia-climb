@@ -50,7 +50,6 @@ function Cloud() {
 export function WeatherGlyph({ code, className }: { code: number; className?: string }) {
   const kind = kindFor(code)
   return (
-    // biome-ignore lint/a11y/noSvgWithoutTitle: decorative; label is provided alongside
     <svg
       className={`wx${className ? ` ${className}` : ''}`}
       viewBox="0 0 40 40"
